@@ -2,7 +2,7 @@ from collections import UserDict
 
 
 class Field:
-    """Базовий клас для полів запису ."""
+    """Базовий клас для полів запису."""
 
     def __init__(self, value):
         self.value = value
@@ -38,28 +38,30 @@ class Record:
         """Додає новий номер телефону до запису."""
         self.phones.append(Phone(phone))
 
-    def remove_phone(self, phone):
-        """Видаляє телефон із запису, якщо він існує."""
-        for p in self.phones:
-            if p.value == phone:
-                self.phones.remove(p)
-                return True
-        return False
-
-    def edit_phone(self, old_phone, new_phone):
-        """Редагує існуючий номер телефону."""
-        for p in self.phones:
-            if p.value == old_phone:
-                p.value = new_phone
-                return True
-        return False
-
     def find_phone(self, phone):
         """Шукає телефон у списку контактів."""
         for p in self.phones:
             if p.value == phone:
                 return p
         return None
+
+    def remove_phone(self, phone):
+        """Видаляє телефон із запису, якщо він існує."""
+        phone_obj = self.find_phone(phone)
+        if phone_obj:
+            self.phones.remove(phone_obj)
+            return True
+        return False
+
+    def edit_phone(self, old_phone, new_phone):
+        """Редагує існуючий номер телефону з перевіркою валідності."""
+        phone_obj = self.find_phone(old_phone)
+        if phone_obj:
+            # Використовуємо перевірку з класу Phone
+            new_phone_obj = Phone(new_phone)
+            phone_obj.value = new_phone_obj.value
+            return True
+        return False
 
     def __str__(self):
         """Повертає рядкове представлення запису."""
